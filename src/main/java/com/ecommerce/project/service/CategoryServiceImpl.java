@@ -1,5 +1,6 @@
 package com.ecommerce.project.service;
 
+import com.ecommerce.project.exception.ResourceNotFoundException;
 import com.ecommerce.project.model.Category;
 import com.ecommerce.project.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,9 +36,14 @@ public class CategoryServiceImpl implements CategoryService {
     public String deleteCategory(Long categoryId) {
 
         Optional<Category> savedCategoryOptional = categoryRepository.findById(categoryId);
-        Category category = savedCategoryOptional.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "category  with category id " + categoryId + " not found"));
+        /*Category category = savedCategoryOptional.orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "category  with category id " + categoryId + " not found"));*/
 
-        categoryRepository.delete(category);
+        Category category1 = savedCategoryOptional.orElseThrow(() ->
+                new ResourceNotFoundException("Category", "categoryId", categoryId));
+       /* categoryRepository.delete(category);*/
+        categoryRepository.delete(category1);
         return "category with category id :" + categoryId +" deleted successfully ";
 
 
@@ -47,13 +53,15 @@ public class CategoryServiceImpl implements CategoryService {
     public Category updateCategory(Category category, Long categoryId) {
 
         Optional<Category> savedCategoryOptional = categoryRepository.findById(categoryId);
-        Category savedCategory = savedCategoryOptional.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Resource Not found"));
+   /*     Category savedCategory = savedCategoryOptional.orElseThrow(()
+                -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Resource Not found"));*/
+        Category savedCategory1 = savedCategoryOptional.orElseThrow(() -> new ResourceNotFoundException("Category", "categoryId", categoryId));
 
         category.setCategoryId(categoryId);
-        savedCategory = categoryRepository.save(category);
-
-        return savedCategory;
-
+     /*   savedCategory = categoryRepository.save(category);
+        return savedCategory;*/
+        savedCategory1 = categoryRepository.save(category);
+        return savedCategory1;
 
     }
 }
