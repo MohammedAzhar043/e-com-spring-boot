@@ -1,5 +1,6 @@
 package com.ecommerce.project.service;
 
+import com.ecommerce.project.exception.APIException;
 import com.ecommerce.project.exception.ResourceNotFoundException;
 import com.ecommerce.project.model.Category;
 import com.ecommerce.project.repository.CategoryRepository;
@@ -29,6 +30,11 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void createCategory(Category category) {
+
+        Category savedCategory = categoryRepository.findByCategoryName(category.getCategoryName());
+        if (savedCategory != null) {
+            throw new APIException("Category  with the name " + category.getCategoryName()+" already exists");
+        }
         categoryRepository.save(category);
     }
 
@@ -36,14 +42,10 @@ public class CategoryServiceImpl implements CategoryService {
     public String deleteCategory(Long categoryId) {
 
         Optional<Category> savedCategoryOptional = categoryRepository.findById(categoryId);
-        /*Category category = savedCategoryOptional.orElseThrow(() ->
-                new ResponseStatusException(HttpStatus.NOT_FOUND,
-                        "category  with category id " + categoryId + " not found"));*/
 
-        Category category1 = savedCategoryOptional.orElseThrow(() ->
+        Category category = savedCategoryOptional.orElseThrow(() ->
                 new ResourceNotFoundException("Category", "categoryId", categoryId));
-       /* categoryRepository.delete(category);*/
-        categoryRepository.delete(category1);
+        categoryRepository.delete(category);
         return "category with category id :" + categoryId +" deleted successfully ";
 
 
@@ -53,15 +55,13 @@ public class CategoryServiceImpl implements CategoryService {
     public Category updateCategory(Category category, Long categoryId) {
 
         Optional<Category> savedCategoryOptional = categoryRepository.findById(categoryId);
-   /*     Category savedCategory = savedCategoryOptional.orElseThrow(()
-                -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Resource Not found"));*/
-        Category savedCategory1 = savedCategoryOptional.orElseThrow(() -> new ResourceNotFoundException("Category", "categoryId", categoryId));
+        Category savedCategory = savedCategoryOptional.
+                orElseThrow(() ->
+                        new ResourceNotFoundException("Category", "categoryId", categoryId));
 
         category.setCategoryId(categoryId);
-     /*   savedCategory = categoryRepository.save(category);
-        return savedCategory;*/
-        savedCategory1 = categoryRepository.save(category);
-        return savedCategory1;
+        savedCategory = categoryRepository.save(category);
+        return savedCategory;
 
     }
 }
