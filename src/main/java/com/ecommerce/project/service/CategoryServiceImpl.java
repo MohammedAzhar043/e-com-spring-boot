@@ -32,12 +32,13 @@ public class CategoryServiceImpl implements CategoryService {
         Category category = categories.stream().
                 filter(c -> c.getCategoryId().equals(categoryId)).
                 findFirst()
-                .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND,"Resource not found"));
+                .orElseThrow(()->
+                        new ResponseStatusException(HttpStatus.NOT_FOUND,"Resource not found"));
        /* if(category==null){
             return "Category not found";
         }*/
         categories.remove(category);
-        return "category with category id :" + categoryId +" deleted successfuly ";
+        return "category with category id :" + categoryId +" deleted successfully ";
     }
 
     @Override
