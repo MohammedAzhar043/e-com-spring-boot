@@ -71,7 +71,10 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Category updateCategory(Category category, Long categoryId) {
+    public CategoryDTO updateCategory(CategoryDTO categoryDTO, Long categoryId) {
+
+        /*converting categoryDTO to category*/
+        Category category = modelMapper.map(categoryDTO, Category.class);
 
         Optional<Category> savedCategoryOptional = categoryRepository.findById(categoryId);
         Category savedCategory = savedCategoryOptional.
@@ -80,7 +83,9 @@ public class CategoryServiceImpl implements CategoryService {
 
         category.setCategoryId(categoryId);
         savedCategory = categoryRepository.save(category);
-        return savedCategory;
+        /*converting category to categoryDTO and returning the DTOObject*/
+        CategoryDTO savedCategoryDTO = modelMapper.map(savedCategory, CategoryDTO.class);
+        return savedCategoryDTO;
 
     }
 }
