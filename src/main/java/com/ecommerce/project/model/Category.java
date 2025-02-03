@@ -17,7 +17,7 @@ public class Category {
     @GeneratedValue(strategy =GenerationType.IDENTITY)
     private Long categoryId;
 
-    @NotBlank(message = "it should not be null")
+    @NotBlank(message = "it should not be blank")
     private String categoryName;
 
 }
