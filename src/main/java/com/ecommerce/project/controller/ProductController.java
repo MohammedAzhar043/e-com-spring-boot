@@ -3,10 +3,16 @@ package com.ecommerce.project.controller;
 import com.ecommerce.project.payload.ProductDTO;
 import com.ecommerce.project.payload.ProductResponse;
 import com.ecommerce.project.service.ProductService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/api")
@@ -51,6 +57,21 @@ public class ProductController {
     public ResponseEntity<ProductDTO> deleteProduct(@PathVariable Long productId) {
         ProductDTO  deletedProductDTO =productService.deleteProduct(productId);
         return new ResponseEntity<>(deletedProductDTO,HttpStatus.OK);
+    }
+
+    private static final Logger log = LoggerFactory.getLogger(ProductController.class);
+
+    @PutMapping("/products/{productId}/image")
+    public ResponseEntity<ProductDTO> updateProductImage(@PathVariable Long productId,
+                                                         @RequestParam("image") MultipartFile image) throws IOException {
+
+
+        log.info("Received request to update image for product ID: {}", productId);
+        log.info("File name: {}", image.getOriginalFilename());
+        log.info("File size: {}", image.getSize());
+
+         ProductDTO updateProduct =  productService.updateProductImage(productId,image);
+        return new ResponseEntity<>(updateProduct, HttpStatus.OK);
     }
 
 }
