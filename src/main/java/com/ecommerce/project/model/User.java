@@ -15,20 +15,26 @@ import java.util.Set;
 @Entity
 @Data
 @NoArgsConstructor
-@Table(name ="users")
+@Table(name ="users",uniqueConstraints = {
+        @UniqueConstraint(columnNames = "username"),
+        @UniqueConstraint(columnNames = "email")
+})
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name ="user_id")
     private Long userId;
 
     @NotBlank
     @Size(max=20)
+    @Column(name = "username")
     private String username;
 
     @NotBlank
     @Size(max=50)
     @Email
+    @Column(name ="email" )
     private String email;
 
     @NotBlank
@@ -41,8 +47,6 @@ public class User {
         this.password = password;
     }
 
-
-
     @Setter
     @Getter
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE},
@@ -52,4 +56,8 @@ public class User {
             inverseJoinColumns = @JoinColumn(name="role_id")
     )
     private Set<Role> roles = new HashSet<>();
+
+    @OneToMany(mappedBy = "user",cascade = {CascadeType.PERSIST,CascadeType.MERGE},
+    orphanRemoval = true)
+    private Set<Product> products;
 }
