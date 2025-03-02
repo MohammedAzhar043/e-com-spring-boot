@@ -46,6 +46,7 @@ public class CategoryController {
        return new ResponseEntity<>(categoryDTO, HttpStatus.OK);
 
    }
+
   @PutMapping(("/public/categories/{categoryId}"))
   public ResponseEntity<CategoryDTO> updateCategory(@Valid @RequestBody CategoryDTO categoryDTO,
                                                @PathVariable Long categoryId) {
